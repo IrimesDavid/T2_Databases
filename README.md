@@ -20,7 +20,7 @@ Each database owns a different table:
 
 - Student email and course abbreviation should be unique.
 - `enrollment_date` is assigned by the backend to the current date and cannot be edited.
-- Enrollments support **Create** and **Delete** only. Students and courses support full CRUD.
+- Enrollments support **Create** and **Delete** only. Students and courses support full CRUD; deleting a student or course also deletes its enrollments.
 
 ## 3. Architecture
 
@@ -52,7 +52,7 @@ PostgreSQL       Oracle       SQL Server
 - **Controller:** Servlets handle page requests and CRUD/detail endpoints.
 - **View:** JSP with JSTL renders the initial page; JavaScript handles tab interaction, client-side search, autocomplete, and asynchronous requests.
 
-Uses three JPA persistence units and three WildFly datasources: `PostgresPU`, `OraclePU`, and `SqlServerPU`. Cross-database operations are not one atomic JPA transaction; keeping the workflow simple (validates both referenced records, then inserts the enrollment).
+Uses three JPA persistence units and three WildFly datasources: `PostgresPU`, `OraclePU`, and `SqlServerPU`. Enrollment creation and course/student enrollment queries validate referenced IDs against their owning databases. Because these are non-XA datasources, enrollment service operations coordinate separate DAO transactions rather than enlisting multiple databases in one JTA transaction. Cross-database operations are therefore not atomic; deleting a student or course removes matching SQL Server enrollments before deleting the corresponding parent record.
 
 ## 4. Frontend
 
@@ -196,7 +196,7 @@ The WildFly configuration is applied automatically when Docker builds the applic
 2. Create the Compose services, named volumes, environment configuration, and database health checks. ✔
 3. Build the multi-stage Dockerfile and verify that WildFly deploys a simple WAR. ✔
 4. Configure JDBC drivers, WildFly datasources, and the three JPA persistence units. ✔
-5. Create the entities, DAOs, and stateless EJB services; test CRUD against each database.
-6. Implement enrollment validation and the cross-database lookup logic.
+5. Create the entities, DAOs, and stateless EJB services; test CRUD against each database. ✔
+6. Implement enrollment validation and the cross-database lookup logic. ✔
 7. Implement the Servlets and the single JSP/JSTL page; add JavaScript for tabs, searches, autocomplete, dropdown GET requests, and asynchronous CRUD.
 8. Test the complete workflow from a clean Docker startup and prepare the architecture diagram and project documentation.

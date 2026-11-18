@@ -6,14 +6,29 @@
 
     <persistence-unit name="PostgresPU" transaction-type="JTA">
         <jta-data-source>java:jboss/datasources/PostgresDS</jta-data-source>
+        <class>com.cms.entity.Student</class>
+        <exclude-unlisted-classes>true</exclude-unlisted-classes>
+        <properties>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+        </properties>
     </persistence-unit>
 
     <persistence-unit name="OraclePU" transaction-type="JTA">
         <jta-data-source>java:jboss/datasources/OracleDS</jta-data-source>
+        <class>com.cms.entity.Course</class>
+        <exclude-unlisted-classes>true</exclude-unlisted-classes>
+        <properties>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+        </properties>
     </persistence-unit>
 
     <persistence-unit name="SqlServerPU" transaction-type="JTA">
         <jta-data-source>java:jboss/datasources/SqlServerDS</jta-data-source>
+        <class>com.cms.entity.Enrollment</class>
+        <exclude-unlisted-classes>true</exclude-unlisted-classes>
+        <properties>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+        </properties>
     </persistence-unit>
 
 </persistence>

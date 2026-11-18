@@ -1,0 +1,17 @@
+module add --name=org.postgresql --resources=/tmp/jdbc/postgresql-42.7.4.jar --dependencies=javax.api,javax.transaction.api
+module add --name=com.microsoft.sqlserver --resources=/tmp/jdbc/mssql-jdbc-12.8.1.jre11.jar --dependencies=javax.api,javax.transaction.api
+module add --name=com.oracle.ojdbc11 --resources=/tmp/jdbc/ojdbc11-23.5.0.24.07.jar --dependencies=javax.api,javax.transaction.api
+
+embed-server --std-out=echo
+
+/subsystem=datasources/jdbc-driver=postgresql:add(driver-name=postgresql,driver-module-name=org.postgresql,driver-class-name=org.postgresql.Driver)
+/subsystem=datasources/jdbc-driver=sqlserver:add(driver-name=sqlserver,driver-module-name=com.microsoft.sqlserver,driver-class-name=com.microsoft.sqlserver.jdbc.SQLServerDriver)
+/subsystem=datasources/jdbc-driver=oracle:add(driver-name=oracle,driver-module-name=com.oracle.ojdbc11,driver-class-name=oracle.jdbc.OracleDriver)
+
+# Compose supplies these environment values when the container starts.
+data-source add --name=PostgresDS --jndi-name=java:jboss/datasources/PostgresDS --driver-name=postgresql --connection-url="jdbc:postgresql://${env.POSTGRES_HOST}:${env.POSTGRES_PORT}/${env.POSTGRES_DB}" --user-name="${env.POSTGRES_USER}" --password="${env.POSTGRES_PASSWORD}" --jta=true --enabled=true
+# The local SQL Server container uses a self-signed certificate; use a trusted certificate outside development.
+data-source add --name=SqlServerDS --jndi-name=java:jboss/datasources/SqlServerDS --driver-name=sqlserver --connection-url="jdbc:sqlserver://${env.SQLSERVER_HOST}:${env.SQLSERVER_PORT};databaseName=${env.SQLSERVER_DB};encrypt=true;trustServerCertificate=true" --user-name="${env.SQLSERVER_USER}" --password="${env.SQLSERVER_PASSWORD}" --jta=true --enabled=true
+data-source add --name=OracleDS --jndi-name=java:jboss/datasources/OracleDS --driver-name=oracle --connection-url="jdbc:oracle:thin:@//${env.ORACLE_HOST}:${env.ORACLE_PORT}/${env.ORACLE_SERVICE}" --user-name="${env.ORACLE_USER}" --password="${env.ORACLE_PASSWORD}" --jta=true --enabled=true
+
+stop-embedded-server

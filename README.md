@@ -189,14 +189,3 @@ course-management-system/
 - `.env` – contains database credentials and other environment-specific configuration.
 
 The WildFly configuration is applied automatically when Docker builds the application image. There is no need to install or configure WildFly manually on the host machine. The version chosen for this project is `v41.0.1.Final-jdk21`.
-
-## 7. Implementation checklist
-
-1. Create the Maven WAR project and choose a Java/WildFly-compatible Jakarta EE version. ✔
-2. Create the Compose services, named volumes, environment configuration, and database health checks. ✔
-3. Build the multi-stage Dockerfile and verify that WildFly deploys a simple WAR. ✔
-4. Configure JDBC drivers, WildFly datasources, and the three JPA persistence units. ✔
-5. Create the entities, DAOs, and stateless EJB services; test CRUD against each database. ✔
-6. Implement enrollment validation and the cross-database lookup logic. ✔
-7. Implement the Servlets and the single JSP/JSTL page; add JavaScript for tabs, searches, autocomplete, dropdown GET requests, and asynchronous CRUD.
-8. Test the complete workflow from a clean Docker startup and prepare the architecture diagram and project documentation.

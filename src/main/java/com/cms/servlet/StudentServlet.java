@@ -58,11 +58,13 @@ public class StudentServlet extends HttpServlet {
     }
 
     private UUID id(HttpServletRequest req) {
-    String path = req.getPathInfo();
-    if (path.endsWith("/")) {
-        path = path.substring(0, path.length() - 1);
+        String path = req.getPathInfo();
+        if (path.endsWith("/")) {
+            path = path.substring(0, path.length() - 1);
+        }
+
+        return UUID.fromString(path.substring(1));
     }
-    return UUID.fromString(path.substring(1));
 
     private Student body(HttpServletRequest req) throws IOException {
         req.setCharacterEncoding("UTF-8");
